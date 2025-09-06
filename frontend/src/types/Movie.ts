@@ -1,0 +1,11 @@
+export default interface Movie {
+  Movie_id: string;
+  Title: string;
+  Rating: number;
+  TotalVotes: number;
+  MetaCritic: number;
+  Budget: number;
+  Runtime: string;
+  genre?: string;
+  genres?: string;
+}
