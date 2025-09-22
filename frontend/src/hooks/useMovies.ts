@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getMovies } from "../api/movies";
-import type { Filter, Movie } from "../types";
+import type { FilterParams, Movie } from "../types";
 
 const useMovies = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -15,14 +15,8 @@ const useMovies = () => {
     init();
   }, []);
 
-  const filterMovies = async ({
-    filter,
-    value,
-  }: {
-    filter: Filter;
-    value: string;
-  }) => {
-    const movies = await getMovies(filter, value);
+  const filterMovies = async (filters?: FilterParams[]) => {
+    const movies = await getMovies(filters);
 
     setMovies(movies);
   };

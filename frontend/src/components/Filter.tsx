@@ -1,30 +1,27 @@
 import React, { useEffect, useState, type ChangeEvent } from "react";
-import type { Filter as FilterModel } from "../types";
+import type { Filter as FilterModel, FilterParams } from "../types";
 
 interface Props {
   filter: FilterModel;
-  onFilterChange: ({
-    filter,
-    value,
-  }: {
-    filter: FilterModel;
-    value: string;
-  }) => void;
+  onFilterChange: (filter: FilterParams) => void;
 }
 
 const Filter = (props: Props) => {
   const { filter, onFilterChange } = props;
 
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState<FilterParams>({
+    filter_type: "",
+    value: "",
+  });
 
   useEffect(() => {
-    onFilterChange({ filter, value: selected });
+    onFilterChange(selected);
   }, [selected]);
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
 
-    setSelected(value);
+    setSelected({ filter_type: filter.filter_type, value });
   };
 
   return (
@@ -35,11 +32,14 @@ const Filter = (props: Props) => {
       <select
         id={filter.id}
         name={filter.name}
-        value={selected}
+        value={selected.value}
         onChange={handleChange}
         className="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-800"
       >
-        <option value="" disabled selected>Select A {filter.label}</option>
+        <option value="" disabled>
+          Select A {filter.label}
+        </option>
+        <option value="any">Any</option>
         {filter.options.length > 0 &&
           filter.options.map(option => (
             <option key={option.value}>{option.value}</option>

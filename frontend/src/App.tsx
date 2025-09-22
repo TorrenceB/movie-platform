@@ -16,7 +16,7 @@ function App() {
       </nav>
 
       <div className="grid grid-cols-4 gap-4">
-        {movies.map(movie => (
+        {movies?.length > 0 && movies.map(movie => (
           <MovieCard key={movie.Movie_id} movie={movie} />
         ))}
       </div>

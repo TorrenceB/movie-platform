@@ -13,13 +13,37 @@ const getFilters = async () => {
     filters &&
     (filters as FilterModel[]).find(filter => filter.filter_type === "genre");
 
+  const ratingFilters =
+    filters &&
+    (filters as FilterModel[]).find(filter => filter.filter_type === "rating");
+
+  const optionsMap = new Map<string, unknown[]>();
+
   if (genreFilters) {
     const [genres] = await db.query(`
-        SELECT DISTINCT genre as value FROM genre ORDER BY genre
-        `);
+        SELECT DISTINCT genre 
+        AS value 
+        FROM genre 
+        ORDER BY genre
+    `);
 
+    optionsMap.set("genre", genres);
+  }
+
+  if (ratingFilters) {
+    const [ratings] = await db.query(`
+        SELECT DISTINCT [Rating] 
+        As value
+        FROM IMDB
+        ORDER BY rating  
+      `);
+
+    optionsMap.set("rating", ratings);
+  }
+
+  if (filters) {
     return (filters as FilterModel[]).map(filter =>
-      Filter({ ...filter, options: genres as [] })
+      Filter({ ...filter, options: optionsMap.get(filter.filter_type) as [] })
     );
   }
 

@@ -1,22 +1,28 @@
-import type { Filter } from "../types";
+import type { FilterParams } from "../types";
 
-const getMovies = async (filter?: Filter, value?: string) => {
+const getMovies = async (
+  filters?: FilterParams[] /* , values?: string[] */
+) => {
   try {
     let url = `http://localhost:3000/movies`;
 
-    if (filter && value) {
-      const params = new URLSearchParams({
-        [filter.filter_type]: value,
+    if (filters && filters.length > 0) {
+      const queryParams = filters.map(({ filter_type, value }) => {
+        return new URLSearchParams({
+          [filter_type]: value,
+        });
       });
 
-      url = `${url}?${params}`;
+      const paramString = queryParams.join("&");
+
+      url += `?${paramString}`
     }
 
     const request = new Request(url);
     const response = await fetch(request);
 
     if (response.ok) {
-      const movies = await response.json();      
+      const movies = await response.json();
 
       return movies;
     } else {

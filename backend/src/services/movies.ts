@@ -8,12 +8,24 @@ const getMovies = async (query: ParsedQs): Promise<MovieModel[]> => {
   if (Object.keys(query).length > 0) {
     const { genre, rating } = query;
 
-    const options = {
-      replacements: [genre, rating]
-    };
+    const replacements: unknown[] = [];
+    const sqlFilter: string[] = [];
 
-    const [movies] = await db.query(
-      `
+    if (genre) {
+      replacements.push(genre);
+      sqlFilter.push(`g.genre = ?`);
+    }
+    if (rating) {
+      replacements.push(rating);
+      sqlFilter.push(`rating = ?`);
+    }
+
+    console.log({ replacements, sqlFilter })
+
+    const options = {
+      replacements,
+    };
+    let SQL = `
       SELECT DISTINCT         
         [Title], 
         [Rating], 
@@ -24,10 +36,15 @@ const getMovies = async (query: ParsedQs): Promise<MovieModel[]> => {
         g.genre
       FROM IMDB i
       LEFT JOIN genre g ON i.Movie_id = g.Movie_id
-      WHERE g.genre = ?
-      `,
-      options
-    );
+      `;
+
+    if (replacements.length > 0) {
+      SQL += ` WHERE ${sqlFilter.join(" AND ")}`;
+    }
+
+    console.log({ SQL });
+
+    const [movies] = await db.query(SQL, options);
 
     return movies as MovieModel[];
   }
