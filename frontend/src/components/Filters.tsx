@@ -43,8 +43,6 @@ const Filters = (props: Props) => {
 
   useEffect(() => {
     onFilterChange(filterParams);
-
-    console.log({ filterParams });
   }, [filterParams]);
 
   return (

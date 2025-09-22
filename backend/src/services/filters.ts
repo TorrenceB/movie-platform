@@ -17,6 +17,10 @@ const getFilters = async () => {
     filters &&
     (filters as FilterModel[]).find(filter => filter.filter_type === "rating");
 
+  const runtimeFilters =
+    filters &&
+    (filters as FilterModel[]).find(filter => filter.filter_type === "runtime");
+
   const optionsMap = new Map<string, unknown[]>();
 
   if (genreFilters) {
@@ -39,6 +43,17 @@ const getFilters = async () => {
       `);
 
     optionsMap.set("rating", ratings);
+  }
+
+  if (runtimeFilters) {
+    const [runtimes] = await db.query(`
+        SELECT DISTINCT [Runtime] 
+        As value
+        FROM IMDB
+        ORDER BY runtime  
+      `);
+
+    optionsMap.set("runtime", runtimes);
   }
 
   if (filters) {

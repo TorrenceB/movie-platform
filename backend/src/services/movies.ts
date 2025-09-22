@@ -6,7 +6,7 @@ const db = createConnection();
 
 const getMovies = async (query: ParsedQs): Promise<MovieModel[]> => {
   if (Object.keys(query).length > 0) {
-    const { genre, rating } = query;
+    const { genre, rating, runtime } = query;
 
     const replacements: unknown[] = [];
     const sqlFilter: string[] = [];
@@ -19,8 +19,12 @@ const getMovies = async (query: ParsedQs): Promise<MovieModel[]> => {
       replacements.push(rating);
       sqlFilter.push(`rating = ?`);
     }
+    if (runtime) {
+      replacements.push(runtime);
+      sqlFilter.push(`runtime = ?`);
+    }
 
-    console.log({ replacements, sqlFilter })
+    console.log({ replacements, sqlFilter });
 
     const options = {
       replacements,

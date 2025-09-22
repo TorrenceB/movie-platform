@@ -1,8 +1,6 @@
 import type { FilterParams } from "../types";
 
-const getMovies = async (
-  filters?: FilterParams[] /* , values?: string[] */
-) => {
+const getMovies = async (filters?: FilterParams[]) => {
   try {
     let url = `http://localhost:3000/movies`;
 
@@ -15,7 +13,7 @@ const getMovies = async (
 
       const paramString = queryParams.join("&");
 
-      url += `?${paramString}`
+      url += `?${paramString}`;
     }
 
     const request = new Request(url);

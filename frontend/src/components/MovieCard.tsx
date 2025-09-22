@@ -19,7 +19,8 @@ const MovieCard = (props: Props) => {
     <div className="flex flex-col items-center rounded border h-[14rem] w-md">
       <h1 className="text-xl font-bold">{movie.Title}</h1>
       {genres}
-      <p>Rating: {movie.Rating}</p>
+      {movie.Rating && <p>Rating: {movie.Rating}</p>}
+      {movie.Runtime && <p>Runtime: {movie.Runtime}</p>}
     </div>
   );
 };
